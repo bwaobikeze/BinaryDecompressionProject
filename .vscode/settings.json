@@ -1,0 +1,13 @@
+{
+  "C_Cpp.errorSquiggles": "Enabled",
+  "files.associations": {
+    "iostream": "cpp",
+    "bitset": "cpp",
+    "iosfwd": "cpp",
+    "string": "cpp",
+    "vector": "cpp",
+    "filesystem": "cpp",
+    "utility": "cpp"
+  },
+  "C_Cpp.default.cppStandard": "c++11"
+}
