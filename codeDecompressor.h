@@ -22,7 +22,7 @@ public:
     };
 
     vector<Alphabet> allSymbols;
-    int binaryLength;
+    int binaryLength = 3;
     string Message = "010010010100101101101";
     string finalDecodedmessage;
     // void startProgram()
@@ -65,22 +65,6 @@ public:
         allSymbols.push_back(symb2);
         allSymbols.push_back(symb3);
     }
-
-    // void creatingThreads()
-    // {
-    //     pthread_t threads[NOPER];
-    //     for (int i = 0; i < NOPER; i++)
-    //     {
-
-    //         pthread_create(&threads[i], NULL, binaryConversion, NULL);
-    //         cout << "creating Thread"
-    //              << " " << i << endl;
-    //     }
-    //     for (int j = 0; j < NOPER; j++)
-    //     {
-    //         pthread_join(threads[j], NULL);
-    //     }
-    // }
 
     // static void *calculator(void *arg)
     // {
@@ -152,17 +136,34 @@ public:
     {
         struct Alphabet *pos_ptr = (struct Alphabet *)arg;
         string result;
-        for (auto it3 = allSymbols.begin(); it3 != allSymbols.end(); it3++)
+        for (auto pos_ptr = allSymbols.begin(); pos_ptr != allSymbols.end(); pos_ptr++)
         {
-            int codeNumber = it3->codeAsigned;
+            int codeNumber = pos_ptr->codeAsigned;
             string stri = bitset<128>(codeNumber).to_string();
-            for (int i = stri.length() - 1; it3->binaryStr.length() != binaryLength; i--)
+            for (int i = stri.length() - 1; pos_ptr->binaryStr.length() != binaryLength; i--)
             {
-                it3->binaryStr += stri[i];
+                pos_ptr->binaryStr += stri[i];
             }
-            reverse(it3->binaryStr.begin(), it3->binaryStr.end());
+            reverse(pos_ptr->binaryStr.begin(), pos_ptr->binaryStr.end());
         }
     }
+
+    void creatingThreads()
+    {
+        pthread_t threads[NOPER];
+        for (int i = 0; i < NOPER; i++)
+        {
+
+            pthread_create(&threads[i], NULL, binaryConversion, &allSymbols[i]);
+            cout << "creating Thread"
+                 << " " << i << endl;
+        }
+        for (int j = 0; j < NOPER; j++)
+        {
+            pthread_join(threads[j], NULL);
+        }
+    }
+
     void MessageDecompressor()
     {
 
