@@ -7,7 +7,8 @@
     "string": "cpp",
     "vector": "cpp",
     "filesystem": "cpp",
-    "utility": "cpp"
+    "utility": "cpp",
+    "istream": "cpp"
   },
   "C_Cpp.default.cppStandard": "c++11"
 }

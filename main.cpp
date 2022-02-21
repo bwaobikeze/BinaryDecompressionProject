@@ -7,8 +7,7 @@
 #include <pthread.h>
 #include <iomanip>
 using namespace std;
-#define NOPER 3
-
+int Numthreads;
 struct Alphabet
 {
     char symbolLabel;
@@ -18,27 +17,17 @@ struct Alphabet
 };
 
 vector<Alphabet> allSymbols;
-int binaryLength = 3;
+int binaryLength;
 string Message = "010010010100101101101";
 string finalDecodedmessage;
-// void startProgram()
-// {
-//     string textFile;
-//     string readFile;
-//     string label;
-//     string value;
-
-//     while (getline(cin, textFile, ' '))
-//     {
-//         cout << "key read: " << textFile << endl;
-//         istringstream ss_key(textFile);
-//         ss_key >> textFile;
-
-//         getline(cin, value);
-//         cout << "value read: " << value << endl;
-//     }
-
-// }
+// functions
+void startProgram();
+void findingGreatestCode();
+void findBinaryLength(int Number);
+int creatingThread();
+void *binaryConversion(void *arg);
+void *MessageDecompressor(void *arj);
+void printInfo();
 
 void settingUPTable()
 {
@@ -57,72 +46,147 @@ void settingUPTable()
     symb3.codeAsigned = 5;
     symb3.Frequency = 0;
 
-    allSymbols.push_back(symb1);
-    allSymbols.push_back(symb2);
-    allSymbols.push_back(symb3);
+    // allSymbols.push_back(symb1);
+    // allSymbols.push_back(symb2);
+    // allSymbols.push_back(symb3);
 }
 
-// static void *calculator(void *arg)
-// {
-//     cout << " Is saying HI" << endl;
-// }
+/*This fuction iterates through the vector of structs and retrives
+ their integer code as well as their symbolLabel and performs the claculation
+ to convert to binary
+ */
 
-// void findingGreatestCode()
-// {
-//     ///////TEST INPUT/////////////////
-//     int bigNum;
-//     // Alphabet symb1;
-//     // symb1.symbolLabel = 'a';
-//     // symb1.codeAsigned = 2;
-//     // symb1.Frequency = 0;
+int main()
+{
+    startProgram();
 
-//     // Alphabet symb2;
-//     // symb2.symbolLabel = 'b';
-//     // symb2.codeAsigned = 4;
-//     // symb2.Frequency = 0;
+    return 0;
+}
 
-//     // Alphabet symb3;
-//     // symb3.symbolLabel = 'c';
-//     // symb3.codeAsigned = 5;
-//     // symb3.Frequency = 0;
+void startProgram()
+{
+    string textFile;
+    string label;
+    char label2;
+    string value;
 
-//     // allSymbols.push_back(symb1);
-//     // allSymbols.push_back(symb2);
-//     // allSymbols.push_back(symb3);
-//     ///////TEST INPUT//////////////////////
+    if (textFile.empty())
+    {
+        getline(cin, textFile);
+        // cout << "Number of thread: " << textFile << endl;
+        stringstream threadconvert(textFile);
+        threadconvert >> Numthreads;
+    }
+    while (getline(cin, textFile))
+    {
+        Alphabet Symbols;
+        stringstream ss(textFile);
 
-//     /*This fuction iterates through the vector of structs and retrives
-//  their integer code and compares them to each other to determine the Greatest Number and
-//  then passes it to the findBinaryLength function
-//  */
-//     vector<Alphabet>::iterator iter2 = allSymbols.begin() + 1;
-//     for (auto it = allSymbols.begin(); it != allSymbols.end(); it++)
-//     {
-//         // cout << "FIRST ITER: " << it->symbolLabel << endl;
-//         if (it->codeAsigned > iter2->codeAsigned)
-//         {
-//             bigNum += it->codeAsigned;
-//             // cout << "The Greatest one: " << bigNum << endl;
-//             findBinaryLength(bigNum);
-//             break;
-//         }
-//         else if (iter2->codeAsigned > it->codeAsigned)
-//         {
-//             bigNum += iter2->codeAsigned;
-//             // cout << "The Greatest one: " << bigNum << endl;
-//             findBinaryLength(bigNum);
-//             break;
-//         }
-//     }
-// }
+        while (getline(ss, label, ' '))
+        {
+            stringstream charconvert(label);
+
+            charconvert >> Symbols.symbolLabel;
+            // cout << "key: " << label << endl;
+
+            getline(ss, value);
+            stringstream IntegerConvert(value);
+            IntegerConvert >> Symbols.codeAsigned;
+            Symbols.Frequency = 0;
+        }
+        allSymbols.push_back(Symbols);
+    }
+    // printInfo();
+    findingGreatestCode();
+}
+
+/*This fuction iterates through the vector of structs and retrives
+their integer code and compares them to each other to determine the Greatest Number and
+then passes it to the findBinaryLength function
+*/
+void findingGreatestCode()
+{
+    int bigNum;
+    vector<Alphabet>::iterator iter2 = allSymbols.begin() + 1;
+    for (auto it = allSymbols.begin(); it != allSymbols.end(); it++)
+    {
+        // cout << "FIRST ITER: " << it->symbolLabel << endl;
+        if (it->codeAsigned > iter2->codeAsigned)
+        {
+            bigNum += it->codeAsigned;
+            // cout << "The Greatest one: " << bigNum << endl;
+            findBinaryLength(bigNum);
+            break;
+        }
+        else if (iter2->codeAsigned > it->codeAsigned)
+        {
+            bigNum += iter2->codeAsigned;
+            // cout << "The Greatest one: " << bigNum << endl;
+            findBinaryLength(bigNum);
+            break;
+        }
+    }
+}
+
 // /*This fuction performs the calculation
 //  to determine the Digit Length
 //  */
-// void findBinaryLength(int Number)
-// {
-//     binaryLength = ceil(log2(Number + 1));
-//     // cout << "LENGTH OF BINARY: " << binaryLength << endl;
-// }
+
+void findBinaryLength(int Number)
+{
+    binaryLength = ceil(log2(Number + 1));
+    // cout << "LENGTH OF BINARY: " << binaryLength << endl;
+    creatingThread();
+}
+
+int creatingThread()
+{
+    pthread_t threads[Numthreads];
+    for (int i = 0; i < Numthreads; i++)
+    {
+
+        int err = pthread_create(&threads[i], NULL, binaryConversion, &allSymbols[i]);
+        if (err)
+        {
+            cout << "Thread creation faild: " << strerror(err);
+            return err;
+        }
+        else
+            cout << "Thread Created with ID: " << i << endl;
+
+        cout << "Wait for Threads to end" << endl;
+    }
+    for (int i = 0; i < Numthreads; i++)
+    {
+        int er = pthread_join(threads[i], NULL);
+
+        if (er)
+        {
+            cout << "Failed to join Thread : " << strerror(er) << endl;
+            return er;
+        }
+        printInfo();
+        cout << "Exiting Main" << endl;
+    }
+}
+
+void *binaryConversion(void *arg)
+{
+    struct Alphabet *pos_ptr = (struct Alphabet *)arg;
+    string result;
+
+    int codeNumber = pos_ptr->codeAsigned;
+    string stri = bitset<128>(codeNumber).to_string();
+    for (int i = stri.length() - 1; pos_ptr->binaryStr.length() != binaryLength; i--)
+    {
+        pos_ptr->binaryStr += stri[i];
+    }
+    reverse(pos_ptr->binaryStr.begin(), pos_ptr->binaryStr.end());
+    MessageDecompressor(pos_ptr);
+    // cout << "Character: " << pos_ptr->symbolLabel << " Code: " << pos_ptr->binaryStr << " Frequency: " << pos_ptr->Frequency << endl;
+    //  break;
+}
+
 void *MessageDecompressor(void *arj)
 {
     struct Alphabet *pos_ptr2 = (struct Alphabet *)arj;
@@ -149,69 +213,14 @@ void *MessageDecompressor(void *arj)
     }
 }
 
-/*This fuction iterates through the vector of structs and retrives
- their integer code as well as their symbolLabel and performs the claculation
- to convert to binary
- */
-
 void printInfo()
 {
     for (auto it5 = allSymbols.begin(); it5 != allSymbols.end(); it5++)
     {
-        cout << "Character: " << it5->symbolLabel << " Code: " << it5->binaryStr << " Frequency: " << it5->Frequency << endl;
+        cout << "Character: " << it5->symbolLabel << ","
+             << " Code: " << it5->binaryStr << ","
+             << " Frequency: " << it5->Frequency
+             << endl;
     }
-    cout << "Decoded Message: " << finalDecodedmessage << endl;
-}
-
-void *binaryConversion(void *arg)
-{
-    struct Alphabet *pos_ptr = (struct Alphabet *)arg;
-    string result;
-
-    int codeNumber = pos_ptr->codeAsigned;
-    string stri = bitset<128>(codeNumber).to_string();
-    for (int i = stri.length() - 1; pos_ptr->binaryStr.length() != binaryLength; i--)
-    {
-        pos_ptr->binaryStr += stri[i];
-    }
-    reverse(pos_ptr->binaryStr.begin(), pos_ptr->binaryStr.end());
-    MessageDecompressor(pos_ptr);
-    // cout << "Character: " << pos_ptr->symbolLabel << " Code: " << pos_ptr->binaryStr << " Frequency: " << pos_ptr->Frequency << endl;
-    //  break;
-}
-
-int main()
-{
-    settingUPTable();
-    pthread_t threads[NOPER];
-    for (int i = 0; i < NOPER; i++)
-    {
-
-        int err = pthread_create(&threads[i], NULL, binaryConversion, &allSymbols[i]);
-        if (err)
-        {
-            cout << "Thread creation faild: " << strerror(err);
-            return err;
-        }
-        else
-            cout << "Thread Created with ID: " << i << endl;
-
-        cout << "Wait for Threads to end" << endl;
-        err = pthread_join(threads[i], NULL);
-        if (err)
-        {
-            cout << "Failed to join Thread : " << strerror(err) << endl;
-            return err;
-        }
-        printInfo();
-        cout << "Exiting Main" << endl;
-    }
-
-    // FixedDecrompressor symbol;
-    // symbol.creatingThreads();
-    // symbol.findingGreatestCode();
-    // symbol.binaryConversion();
-    // symbol.MessageDecompressor();
-    // symbol.printInfo();
-    return 0;
+    // cout << "Decoded Message: " << finalDecodedmessage << endl;
 }
