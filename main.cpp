@@ -107,25 +107,22 @@ then passes it to the findBinaryLength function
 void findingGreatestCode()
 {
     int bigNum;
-    vector<Alphabet>::iterator iter2 = allSymbols.begin() + 1;
+    int tempbigNum;
+    vector<Alphabet>::iterator iter2;
     for (auto it = allSymbols.begin(); it != allSymbols.end(); it++)
     {
-        // cout << "FIRST ITER: " << it->symbolLabel << endl;
-        if (it->codeAsigned > iter2->codeAsigned)
+
+        for (iter2 = allSymbols.begin() + 1; iter2 != allSymbols.end(); iter2++)
         {
-            bigNum += it->codeAsigned;
-            // cout << "The Greatest one: " << bigNum << endl;
-            findBinaryLength(bigNum);
-            break;
-        }
-        else if (iter2->codeAsigned > it->codeAsigned)
-        {
-            bigNum += iter2->codeAsigned;
-            // cout << "The Greatest one: " << bigNum << endl;
-            findBinaryLength(bigNum);
-            break;
+
+            if (it->codeAsigned < iter2->codeAsigned)
+            {
+
+                tempbigNum = iter2->codeAsigned;
+            }
         }
     }
+    findBinaryLength(tempbigNum);
 }
 
 // /*This fuction performs the calculation
@@ -135,7 +132,7 @@ void findingGreatestCode()
 void findBinaryLength(int Number)
 {
     binaryLength = ceil(log2(Number + 1));
-    // cout << "LENGTH OF BINARY: " << binaryLength << endl;
+    cout << "LENGTH OF BINARY: " << binaryLength << endl;
     creatingThread();
 }
 
@@ -223,4 +220,5 @@ void printInfo()
              << endl;
     }
     // cout << "Decoded Message: " << finalDecodedmessage << endl;
+    // cout << binaryLength << endl;
 }
