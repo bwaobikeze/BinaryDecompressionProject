@@ -31,30 +31,28 @@ void printInfo();
 
 void settingUPTable()
 {
-    Alphabet symb1;
-    symb1.symbolLabel = 'a';
-    symb1.codeAsigned = 2;
-    symb1.Frequency = 0;
+    ///TEST DATA
+//     Alphabet symb1;
+//     symb1.symbolLabel = 'a';
+//     symb1.codeAsigned = 2;
+//     symb1.Frequency = 0;
 
-    Alphabet symb2;
-    symb2.symbolLabel = 'b';
-    symb2.codeAsigned = 4;
-    symb2.Frequency = 0;
+//     Alphabet symb2;
+//     symb2.symbolLabel = 'b';
+//     symb2.codeAsigned = 4;
+//     symb2.Frequency = 0;
 
-    Alphabet symb3;
-    symb3.symbolLabel = 'c';
-    symb3.codeAsigned = 5;
-    symb3.Frequency = 0;
+//     Alphabet symb3;
+//     symb3.symbolLabel = 'c';
+//     symb3.codeAsigned = 5;
+//     symb3.Frequency = 0;
 
     // allSymbols.push_back(symb1);
     // allSymbols.push_back(symb2);
     // allSymbols.push_back(symb3);
 }
 
-/*This fuction iterates through the vector of structs and retrives
- their integer code as well as their symbolLabel and performs the claculation
- to convert to binary
- */
+
 
 int main()
 {
@@ -62,6 +60,11 @@ int main()
 
     return 0;
 }
+
+/*This fuction iterates through the text file using stander cin 
+and creats and assignes the properties to the struct "alphabet" which is then passed into the vector of structs called 
+"allSymbols" which creates the list of all the Symbols being passed in
+ */
 
 void startProgram()
 {
